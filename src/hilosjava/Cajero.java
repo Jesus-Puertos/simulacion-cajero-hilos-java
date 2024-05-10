@@ -7,33 +7,31 @@ public class Cajero implements Runnable {
     private static  int totalCaja2 = 0;
 
 
-    private Precio precios;
     private Cliente cliente;
     private int nCajero;
 
-    public Cajero(Cliente cliente, int nCajero, Precio precios) {
+    public Cajero(Cliente cliente, int nCajero) {
         this.cliente = cliente;
         this.nCajero = nCajero;
-        this.precios = precios;
     }
 
     @Override
     public void run() {
         int totalTiempo = 0;
         int[] tiempoProductos = cliente.getTiempoProductos();
-        int [] precioProductos = precios.getPrecioProductos();
+        int [] precioProductos = cliente.getPreciosProductos();
 
         for (int i = 0; i < tiempoProductos.length; i++) {
             int tiempoProducto = tiempoProductos[i];
             totalTiempo += tiempoProducto;
             System.out.println("cajero " + nCajero + " escaneando producto " + tiempoProducto);
-            synchronized (Cajero.class) {
-                contadorProductos += 1;
-            }
+
 
             int precioProducto = precioProductos[i];
             System.out.println("cajero " + nCajero + " cobrando $" + precioProducto + " del producto " + tiempoProducto);
             synchronized (Cajero.class) {
+                contadorProductos += 1;
+
                 totalDinero += precioProducto;
                     if (nCajero == 1) {
                         totalCaja1 += precioProducto;
